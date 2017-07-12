@@ -1,6 +1,6 @@
-#'LiDAR metrics computation
+#'LiDAR-derived metrics
 #'
-#'@description Compute statistically based metrics that describe the LiDAR dataset
+#'@description Compute LiDAR metrics that describe statistically the Lidar dataset
 #'
 #'@usage LASmetrics(LASfile, minht, above)
 #'
@@ -10,6 +10,99 @@
 #'@return Returns A matrix with the LiDAR-derived vegetation height and canopy cover metrics (see \emph{cloudmetrics}, in McGaughey, 2014)
 #'@author Carlos Alberto Silva
 #'@seealso McGaughey, R. 2014. FUSION/LDV: Software for lidar data analysis and visualization. Version 3.41. Seattle, WA: U.S. Department of Agriculture, Forest Service, Pacific Northwest Research Station.
+#'
+#'
+#'# List of the LiDAR-derived metrics:
+#'\itemize{ 
+#'\item Total all return count   
+#'\item Total first return count
+#'\item Total all return count above \emph{minht}
+#'\item Return 1 count above \emph{minht}
+#'\item Return 2 count above \emph{minht}
+#'\item Return 3 count above \emph{minht}
+#'\item Return 5 count above \emph{minht}
+#'\item Return 6 count above \emph{minht}
+#'\item Return 7 count above \emph{minht}
+#'\item Return 8 count above \emph{minht}
+#'\item Return 9 count above \emph{minht}
+#'\item HMIN - Maximum Height
+#'\item HMAX - Maximum Height
+#'\item HMEAN - Mean height
+#'\item HMOD - Modal height
+#'\item HMEDIAN - Median height
+#'\item HSD - Standard deviation of heights
+#'\item HVAR - Variance of heights
+#'\item HCV - Coefficient of variation of heights
+#'\item HKUR - Kurtosis of Heights
+#'\item HSKE - Skewness of Heights
+#'\item H01TH - 01th percentile of height
+#'\item H05TH - 05th percentile of height
+#'\item H10TH - 10th percentile of height
+#'\item H15TH - 15th percentile of height
+#'\item H20TH - 20th percentile of height
+#'\item H25TH - 25th percentile of height
+#'\item H30TH - 30th percentile of height
+#'\item H35TH - 35th percentile of height
+#'\item H40TH - 40th percentile of height
+#'\item H45TH - 45th percentile of height
+#'\item H50TH - 50th percentile of height
+#'\item H55TH - 55th percentile of height
+#'\item H60TH - 60th percentile of height
+#'\item H65TH - 65th percentile of height
+#'\item H70TH - 70th percentile of height
+#'\item H75TH - 75th percentile of height
+#'\item H80TH - 80th percentile of height
+#'\item H90TH - 90th percentile of height
+#'\item H95TH - 95th percentile of height
+#'\item H99TH - 99th percentile of height
+#'\item CRR - Canopy relief ratio
+#'\item IMIN - Minimum intensity
+#'\item IMAX - Maximum intensity
+#'\item IMEAN - Mean intensity
+#'\item IMOD - Modal intensity
+#'\item IMEDIAN - Median intensity
+#'\item ISD - Standard deviation of intensities
+#'\item IVAR - Variance of heights
+#'\item ICV - Coefficient of variation of intensities
+#'\item IKUR - Kurtosis of intensities
+#'\item ISKE - Skewness of intensities
+#'\item I01TH - 1th percentile of intensity
+#'\item I05TH - 5th percentile of intensity
+#'\item I10TH - 10th percentile of intensity
+#'\item I15TH - 15th percentile of intensity
+#'\item I20TH - 20th percentile of intensity
+#'\item I25TH - 25th percentile of intensity
+#'\item I30TH - 30th percentile of intensity
+#'\item I35TH - 35th percentile of intensity
+#'\item I40TH - 40th percentile of intensity
+#'\item I45TH - 45th percentile of intensity
+#'\item I50TH - 50th percentile of intensity
+#'\item I55TH - 55th percentile of intensity
+#'\item I60TH - 60th percentile of intensity
+#'\item I65TH - 65th percentile of intensity
+#'\item I70TH - 70th percentile of intensity
+#'\item I75TH - 75th percentile of intensity
+#'\item I80TH - 80th percentile of intensity
+#'\item I90TH - 90th percentile of intensity
+#'\item I95TH - 95th percentile of intensity
+#'\item I99TH - 99th percentile of intensity
+#'\item Pentage first returns above \emph{above}
+#'\item Percentage all returns above \emph{above}
+#'\item (All returns above above / Total first returns)*100
+#'\item First returns above \emph{above}
+#'\item All returns above \emph{above}
+#'\item Percentage first returns above mean
+#'\item Percentage first returns above mode
+#'\item Percentage all returns above mean
+#'\item Percentage all returns above mode
+#'\item (All returns above mean / Total first returns)*100
+#'\item (All returns above mode / Total first returns)* 100
+#'\item First returns above mean"
+#'\item First returns above mode
+#'\item All returns above mean
+#'\item All returns above mode
+#'}
+#'
 #'@examples
 #'
 #'#=======================================================================#
@@ -26,7 +119,7 @@
 #'LiDARmetrics<-LASmetrics(LASfile, minht, above)
 #'
 #'#==========================================================================#
-#'# Example 02: Computing LiDAR metrics for multiple LAS files within a folder
+#'# Example 02: Computing Lidar metrics for multiple LAS files within a folder
 #'#==========================================================================#
 #'# Set folder where LAS source files reside
 #'folder=dirname(LASfile)
@@ -45,7 +138,7 @@
 #'for ( i in LASlist) {
 #'  getMetrics<-rbind(getMetrics, LASmetrics(i, minht, above))}
 #'
-#'# Table of the LiDAR metrics
+#'# Table of the Lidar metrics
 #'LiDARmetrics<-cbind(Files=c(basename(LASlist)), getMetrics)
 #'head(LiDARmetrics)
 #'
@@ -205,12 +298,12 @@ LASmetrics<-function(LASfile,minht=1.37,above=2) {
   
   
   
-  colnames(metrics)<-c("Total all return count","Total first return count",paste("Total all return count", above),paste("Return 1 count", above),paste("Return 2 count", above),paste("Return 3 count", above),paste("Return 4 count", above),
-                       paste("Return 5 count", above),paste("Return 6 count", above),paste("Return 7 count", above),paste("Return 8 count", above),paste("Return 9 count", above),"hmin",
-                       "hmax","hmean",  "hmode","hmedian","hsd","hvar","hcv","hkurtosis","hskewness","hP1",
-                       "hP5","hP10","hP15","hP20","hP25","hP30","hP35","hP40","hP45","hP50","hP55","hP60","hP65","hP70","hP75",
-                       "hP80","hP90","hP95","hP99","Canopy.relief.ratio","Imin","Imax","Imean","Imode","Imedian","Isd","Ivar","Icv",
-                       "Ikurtosis","Iskewness","IP1","IP5","IP10","IP15","IP20","IP25","IP30","IP35","IP40","IP45","IP50","IP55","IP60",
+  colnames(metrics)<-c("Total all return count","Total first return count",paste("Total all return count above", above),paste("Return 1 count above", above),paste("Return 2 count above", above),paste("Return 3 count", above),paste("Return 4 count", above),
+                       paste("Return 5 count", above),paste("Return 6 count", above),paste("Return 7 count above", above),paste("Return 8 count above", above),paste("Return 9 count above", above),"hmin",
+                       "HMAX","HMEAN",  "HMODE","HMEADIAN","HSD","HVAR","HCV","HKUR","HSKE","H01TH",
+                       "H05TH","H10TH","H15TH","H20TH","H25TH","H30TH","H35TH","H40TH","H45TH","H50TH","H55TH","H60TH","H65TH","H70TH","H75TH",
+                       "H80TH","H90TH","H95TH","H99TH","Canopy.relief.ratio","IMIN","IMAX","IMEAN","IMODE","IMEADIAN","ISD","IVAR","ICV",
+                       "IKUR","ISKE","I01TH","I05TH","I10TH","I15TH","I20TH","I25TH","I30TH","I35TH","I40TH","I45TH","I50TH","I55TH","I60TH",
                        "IP65","IP70","IP75","IP80","IP90","IP95","IP99",paste("Pentage first returns Above",above),paste("Percentage all returns above",above),
                        paste("(All returns above",above,"/ Total first returns)*100"),paste("First returns above",above),paste("All returns above",above),"Percentage first returns above mean",
                        "Percentage first returns above mode","Percentage.all.returns.above.mean","Percentage all returns above mode","(All returns above mean / Total first returns)*100",

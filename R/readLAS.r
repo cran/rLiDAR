@@ -34,7 +34,7 @@
 #'
 #'# plot 3D
 #'library(rgl)
-#'plot3d(rLAS[,1:3], col=col, axes=FALSE,xlab="", ylab="", zlab="")
+#'points3d(rLAS[,1:3], col=col, axes=FALSE,xlab="", ylab="", zlab="")
 #'axes3d(c("x+", "y-", "z-"))                 # axes
 #'grid3d(side=c('x+', 'y-', 'z'), col="gray") # grid
 #'title3d(xlab = "UTM.Easting", ylab = "UTM.Northing",zlab = "Height(m)", col="red") # title
@@ -57,7 +57,7 @@
 #'plot(rLAS[,1], rLAS[,2], col=col, xlab="UTM.Easting", ylab="UTM.Northing", main="Color by height")
 #'
 #'# plot 3D
-#'plot3d(rLAS[,1:3], col=col, axes=FALSE, xlab="", ylab="", zlab="")
+#'points3d(rLAS[,1:3], col=col, axes=FALSE, xlab="", ylab="", zlab="")
 #'axes3d(c("x+", "y-", "z-"))                     # axes
 #'grid3d(side=c('x+', 'y-', 'z'), col="gray")     # grid
 #'title3d(xlab = "UTM.Easting", ylab = "UTM.Northing",zlab = "Height(m)", col="red") # title
@@ -85,7 +85,6 @@ readLAS<- function(LASfile, short=TRUE) {
     pheader[[hd$Item[i]]] <- readBin(con, what = hd$what[i], size = hd$Rsize[i], endian = "little", n = hd$n[i])
   }
   close(con)
-  ?readBin
   numberPointRecords <- pheader[["Number of point records"]]
   offsetToPointData <- pheader[["Offset to point data"]]
   pointDataRecordLength <-pheader[["Point Data Record Length"]]
@@ -216,7 +215,7 @@ readLAS<- function(LASfile, short=TRUE) {
     Byte_offset_to_waveform_data <- readBin(t(allbytes[, 30:37]), "integer", size = 8, n = numberPointRecords, signed = FALSE, endian = "little")
     Waveform_packet_size_in_bytes <- readBin(t(allbytes[, 38:41]), "integer", size = 4, n = numberPointRecords, signed = FALSE, endian = "little")
     Return_Point_Waveform_Location<- readBin(t(allbytes[, 42:45]), "integer", size = 4, n = numberPointRecords, signed = FALSE, endian = "little")
-    X.t<- readBin(t(allbytes[, 46:49]), "intege", size = 4, n = numberPointRecords, signed = FALSE, endian = "little")
+    X.t<- readBin(t(allbytes[, 46:49]), "integer", size = 4, n = numberPointRecords, signed = FALSE, endian = "little")
     Y.t<- readBin(t(allbytes[, 50:53]), "integer", size = 4, n = numberPointRecords, signed = FALSE, endian = "little")
     Z.t<- readBin(t(allbytes[, 54:57]), "integer", size = 4, n = numberPointRecords, signed = FALSE, endian = "little")
     

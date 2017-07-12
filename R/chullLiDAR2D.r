@@ -40,46 +40,24 @@
 #'# Get the ground-projected area of LiDAR convex hull
 #'chullList<-chullTrees$chullArea 
 #'summary(chullList) # summary 
-#'
+#'@importFrom plyr dlply
+#'@importFrom sp SpatialPolygons SpatialPolygonsDataFrame rbind.SpatialPolygonsDataFrame
+#'@importFrom grDevices chull
 #'@export
-chullLiDAR2D<-function(xyid) {
+chullLiDAR2D<-function(xyid) { 
   
-  spdfList<-list()
-  for ( i in levels(factor(xyid[,3]))) {
+  spdfList<-plyr::dlply(as.data.frame(xyid),"id", function(input) {
+    cat (".");utils::flush.console()
+    ch <- grDevices::chull(input)
+    coords <- input[c(ch, ch[1]),-3]
+    sp_poly <- sp::SpatialPolygons(list(sp::Polygons(list(sp::Polygon(coords)),ID = input[1,3])))
+    spdf <- sp::SpatialPolygonsDataFrame(sp_poly, data = data.frame(input[1,3], row.names = row.names(sp_poly)))
     
-    subSet<-subset(xyid,xyid[,3]==i)
-    dat<-subSet[,1:2]
-    ch <- chull(dat)
-    coords <- dat[c(ch, ch[1]), ]  
-    sp_poly <- SpatialPolygons(list(Polygons(list(Polygon(coords)), ID=i)))
-    spdfList[i]<-SpatialPolygonsDataFrame(sp_poly, data=data.frame(subSet[1,1], row.names=row.names(sp_poly)))
-    cat (".");flush.console()
-  } 
-    
-  polygons <- slot(spdfList[[1]], "polygons")
+  })
   
-  for (i in levels(factor(xyid[,3]))) {
-    data.loc <- spdfList[[i]]
-    polygons <- c(slot(data.loc, "polygons"),polygons)
-  }
-  
-  for (i in 1:length(polygons)) {
-    slot(polygons[[i]], "ID") <- paste(i)
-    
-  }
-  
-  spatialPolygons <- SpatialPolygons(polygons)
-  spdf <- SpatialPolygonsDataFrame(spatialPolygons, 
-                                   data.frame(TreeID=1:length(polygons)))
-  
-  options(scipen=4)
-  spdf<-spdf[spdf@data[-length(polygons),],]
-  areaList<-as.numeric(sapply(slot(spdf, "polygons"), slot, "area"))
-  canopyTable<-data.frame(cbind(as.numeric(levels(factor(xyid[,3]))),rev(areaList)))
-  spdf@data$TreeID<-canopyTable[,1]
-  spdf@data$GPA<-canopyTable[,2]
-  colnames(canopyTable)<-c("TreeID","GPA")
-  return(list(chullPolygon=spdf,chullArea=canopyTable)) 
-      
+  spdf = do.call(sp::rbind.SpatialPolygonsDataFrame, spdfList)
+  spdf@data$GPA<-as.numeric(sapply(methods::slot(spdf, "polygons"), methods::slot,"area"))
+  colnames(spdf@data) <- c("TreeID", "GPA")
+  return(list(chullPolygon = spdf, chullArea = spdf@data))
 }
 

@@ -45,11 +45,12 @@
 #'sCHM<-CHMsmoothing(chm, filter, ws)
 #'
 #'@importFrom raster raster focal
+#'@importFrom stats median
 #'@export CHMsmoothing
 CHMsmoothing<-function(chm, filter="mean", ws=5, sigma=0.6) {
 
   if (class(chm)[1]!='RasterLayer') {
-      chmInput<-as(chm,'RasterLayer')
+      chmInput<-methods::as(chm,'RasterLayer')
       } else {chmInput<-chm
   }
   

@@ -1,6 +1,6 @@
-#'Deriving the ground-projected canopy area of individual trees using LiDAR-derived derived Canopy Height Model (CHM) 
+#'Individual trees crown deliniation from LiDAR-derived Canopy Height Model (CHM) 
 #'
-#'@description Compute and export the ground-projected areas of individual tree canopies detected within the LiDAR-derived Canopy Height Model (CHM) 
+#'@description Delineate and compute ground-projected area of individual tree crowns detected from LiDAR-derived CHM
 #'
 #'@usage ForestCAS(chm, loc, maxcrown, exclusion)
 #'
@@ -64,12 +64,12 @@ ForestCAS<-function(chm,loc,maxcrown=10,exclusion=0.3) {
   if (class(exclusion)!="numeric") {stop("The exclusion parameter is invalid. It is not a numeric input")}
   if (exclusion >=1) {stop("The exclusion parameter is invalid. It must to be less than 1numeric input")}
 
-  if (class(chm)=="RasterLayer"){ chm<-as(chm, "SpatialGridDataFrame")}
+  if (class(chm)=="RasterLayer"){ chm<-methods::as(chm, "SpatialGridDataFrame")}
     
   Hthreshold<-min(loc[,3])*exclusion
   polys<-list() 
   width<-numeric()  
-  
+
   DF2raster<-function(h.mH, i){
     
     h.mHkl<-subset(h.mH,h.mH[,4]==levels(factor(h.mH[,4]))[i])
@@ -122,8 +122,8 @@ ForestCAS<-function(chm,loc,maxcrown=10,exclusion=0.3) {
   
   SP = SpatialPolygons(polys)
   veronoi = SpatialPolygonsDataFrame(SP, data=data.frame(x=loc[,1], 
-                                                         y=loc[,2], row.names=sapply(slot(SP, 'polygons'), 
-                                                                                          function(x) slot(x, 'ID'))))
+                                                         y=loc[,2], row.names=sapply(methods::slot(SP, 'polygons'), 
+                                                                                          function(x) methods::slot(x, 'ID'))))
   chmV<-over(SpatialPoints(Points.PlyD[,2:3]), SP)
   RpD<-cbind(Points.PlyD,chmV)
   RpD.filter<-subset(RpD[,1:5],RpD[,1]>=Hthreshold)
@@ -134,17 +134,17 @@ ForestCAS<-function(chm,loc,maxcrown=10,exclusion=0.3) {
    
   for ( j in 1:nlevels(factor(h.mH[,4]))){
     assign(paste0("SP.polys", j), DF2raster(h.mH,j))
-    cat (".");flush.console()}
+    cat (".");utils::flush.console()}
   
-  polygons <- slot(get("SP.polys1"), "polygons")
+  polygons <- methods::slot(get("SP.polys1"), "polygons")
   
   for (i in 1:nlevels(factor(h.mH[,4]))) {
     data.loc <- get(paste0("SP.polys",i))
-    polygons <- c(slot(data.loc, "polygons"),polygons)
+    polygons <- c(methods::slot(data.loc, "polygons"),polygons)
   }
   
   for (i in 1:length(polygons)) {
-    slot(polygons[[i]], "ID") <- paste(i)
+    methods::slot(polygons[[i]], "ID") <- paste(i)
   }
   
   spatialPolygons <- SpatialPolygons(polygons)
@@ -153,7 +153,7 @@ ForestCAS<-function(chm,loc,maxcrown=10,exclusion=0.3) {
   
   options(scipen=10)
   spdf<-spdf[spdf@data[-length(polygons),],]
-  areaList<-sapply(slot(spdf, "polygons"), slot, "area")
+  areaList<-sapply(methods::slot(spdf, "polygons"), methods::slot, "area")
   canopyTable<-cbind(loc,areaList)
   colnames(canopyTable)<-c("x","y","z","ca")
   result=list(spdf,canopyTable) 

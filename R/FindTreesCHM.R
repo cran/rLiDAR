@@ -34,8 +34,8 @@
 #'XY<-SpatialPoints(treeList[,1:2]) # Spatial points
 #'plot(XY, add=TRUE, col="red")        # plotthing tree location
 #'
-#'@importFrom raster raster focal xyFromCell Which projection
-#'@importFrom sp SpatialPoints over SpatialGridDataFrame 
+#'@importFrom raster raster focal xyFromCell Which crs
+#'@importFrom sp SpatialPoints over SpatialGridDataFrame
 #'@export
 FindTreesCHM<-function(chm, fws=5,minht=1.37) {
   
@@ -49,15 +49,12 @@ FindTreesCHM<-function(chm, fws=5,minht=1.37) {
   
   f <- function(chm) max(chm)
   
-  rlocalmax <- focal(chm, fun=f, w=w, pad=TRUE, padValue=NA)
+  rlocalmax <- raster::focal(chm, fun=f, w=w, pad=TRUE, padValue=NA)
   
   setNull<- chm==rlocalmax
-  XYmax <- SpatialPoints(xyFromCell(setNull, Which(setNull==1, cells=TRUE)))
-  
-  #proj<-projection(chm)
-  #projection(XYmax)=proj
-  htExtract<-over(XYmax,as(chm, "SpatialGridDataFrame"))
-  treeList<-cbind(XYmax,htExtract)
+  XYmax <- sp::SpatialPoints(raster::xyFromCell(setNull, raster::Which(setNull ==1, cells = TRUE)), proj4string = raster::crs(chm))
+  htExtract<-sp::over(XYmax,methods::as(chm, "SpatialGridDataFrame"))
+  treeList<-cbind(coordinates(XYmax),htExtract)
   
   colnames(treeList)<-c("x","y","height")
     

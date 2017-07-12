@@ -1,63 +1,64 @@
-#'Individual tree LiDAR metrics
+#'LiDAR-derived individual tree crown metrics
 #'
-#'@description This funtion computes LiDAR-based statistic metrics for individual trees detected from the 3D LiDAR point cloud. 
+#'@description Compute individual tree crown metrics from lidar data
 #'
-#'@usage rMetrics(xyziId)
+#'@usage CrownMetrics(xyziId)
 #'
 #'@param xyziId A 5-column matrix with the x, y, z coordinates, intensity and the tree id classification for the LiDAR point cloud.
 #'@return Returns A matrix of the LiDAR-based metrics for the individual tree detected.
 #'@author Carlos Alberto Silva
 #'@details
 #' 
-#'# List of the individual tree LiDAR metrics:
-#'
-#'# Total number of returns (TotalReturns);   
-#'# UTM Easting coordinate of the tree top (Etop);
-#'# UTM Northing coordinate of the tree top (Ntop);
-#'# Minimum UTM Easting coordinate (Emin);
-#'# Minimum UTM Northing coordinate (Nmin);
-#'# Maximum UTM Easting coordinate (Emax);
-#'# Maxmium UTM Northing coordinate (Nmax);
-#'# Tree crown width 01 (Ewidth);
-#'# Tree crown width 02 (Nwidth);
-#'# Maximum Height (hmax);
-#'# Mean height (hmean);
-#'# Standard deviation of height (hsd);
-#'# Coefficient of variation of height (hcv);
-#'# Mode of height (hmod);
-#'# 5th percentile of height (h5);	
-#'# 10th percentile of height (h10);	
-#'# 20th percentile of height (h20);
-#'# 25th percentile of height (h25);	
-#'# 30th percentile of height (h30);	
-#'# 40th percentile of height (h40);	
-#'# 50th percentile of height (h50);	
-#'# 60th percentile of height (h60);
-#'# 70th percentile of height (h70);
-#'# 75th percentile of height (h75);
-#'# 80th percentile of height (h80);
-#'# 90th percentile of height (h90);
-#'# 95th percentile of height (h95);
-#'# 99th percentile of height (h99);
-#'# Maximum intensity (imax);
-#'# Mean intensity (imean);
-#'# Standard deviation of intensity (isd);
-#'# Coefficient of variation of intensity (icv);
-#'# Mode of intensity (imod);
-#'# 5th percentile of intensity (i5);
-#'# 10th percentile of intensity (i10);
-#'# 20th percentile of intensity (i20);
-#'# 25th percentile of intensity (i25);
-#'# 30th percentile of intensity (i30);
-#'# 40th percentile of intensity (i40);
-#'# 50th percentile of intensity (i50);
-#'# 60th percentile of intensity (i60);
-#'# 70th percentile of intensity (i70);
-#'# 75th percentile of intensity (i75);
-#'# 80th percentile of intensity (i80);
-#'# 90th percentile of intensity (i90);
-#'# 95th percentile of intensity (i95);
-#'# 99th percentile of intensity (i99).
+#'# List of the individual tree crown metrics:
+#'\itemize{ 
+#'\item TotalReturns: Total number of returns   
+#'\item ETOP - UTM Easting coordinate of the tree top
+#'\item NTOP - UTM Northing coordinate of the tree top
+#'\item EMIN - Minimum UTM Easting coordinate
+#'\item NMIN - Minimum UTM Northing coordinate
+#'\item EMAX - Maximum UTM Easting coordinate
+#'\item NMAX - Maxmium UTM Northing coordinate
+#'\item EWIDTH - Tree crown width 01
+#'\item NWIDTH - Tree crown width 02
+#'\item HMAX - Maximum Height
+#'\item HMEAN - Mean height
+#'\item HSD - Standard deviation of height
+#'\item HCV - Coefficient of variation of height
+#'\item HMOD - Mode of height
+#'\item H5TH - 5th percentile of height
+#'\item H10TH - 10th percentile of height
+#'\item H20TH - 20th percentile of height
+#'\item H25TH - 25th percentile of height
+#'\item H30TH - 30th percentile of height
+#'\item H40TH - 40th percentile of height
+#'\item H50TH - 50th percentile of height
+#'\item H60TH - 60th percentile of height
+#'\item H70TH - 70th percentile of height
+#'\item H75TH - 75th percentile of height
+#'\item H80TH - 80th percentile of height
+#'\item H90TH - 90th percentile of height
+#'\item H95TH - 95th percentile of height
+#'\item H99TH - 99th percentile of height
+#'\item IMAX - Maximum intensity
+#'\item IMEAN - Mean intensity
+#'\item ISD - Standard deviation of intensity
+#'\item ICV - Coefficient of variation of intensity
+#'\item IMOD - Mode of intensity
+#'\item I5TH - 5th percentile of intensity
+#'\item I10TH - 10th percentile of intensity
+#'\item I20TH - 20th percentile of intensity
+#'\item I25TH - 25th percentile of intensity
+#'\item I30TH - 30th percentile of intensity
+#'\item I40TH - 40th percentile of intensity
+#'\item I50TH - 50th percentile of intensity
+#'\item I60TH - 60th percentile of intensity
+#'\item I70TH - 70th percentile of intensity
+#'\item I75TH - 75th percentile of intensity
+#'\item I80TH - 80th percentile of intensity
+#'\item I90TH - 90th percentile of intensity
+#'\item I95TH - 95th percentile of intensity
+#'\item I99TH - 99th percentile of intensity
+#'}
 #'
 #'@examples
 #'
@@ -86,11 +87,11 @@
 #'#  Computing individual tree LiDAR metrics 
 #'#=======================================================================#
 #'
-#'TreesMetrics<-rMetrics(xyziId)
+#'TreesMetrics<-CrownMetrics(xyziId)
 #'head(TreesMetrics)
-#'
+#'@importFrom stats median na.omit quantile sd var
 #'@export
-rMetrics<-function(xyziId) {  
+CrownMetrics<-function(xyziId) {  
   
   # ----from moments package: Lukasz Komsta et al.(2015) ---#
   "skewness" <-
@@ -123,12 +124,12 @@ rMetrics<-function(xyziId) {
       else kurtosis(as.vector(x), na.rm = na.rm)
     }
   #-----------------------------------------------------------#
-  MetricsList<-matrix(,ncol=68)[-1,]
+  MetricsList<-matrix(ncol=68)[-1,]
   nlevels<-as.numeric(levels(factor(xyziId[,5])))
   
   for ( i in nlevels){
     #print(i)
-    cat (".");flush.console()
+    cat (".");utils::flush.console()
     
     xyz.c<-subset(xyziId[,1:4],xyziId[,5]==i)
     
@@ -235,10 +236,10 @@ rMetrics<-function(xyziId) {
     }
   }
   
-  colnames(MetricsList)<-c("Tree","TotalReturns","Etop","Ntop","Emin","Nmin","Emax","Nmax","Ewidth","Nwidth","hmax","hmin","hmean","hmedian","hmode",
-                           "hvar","hsd","hcv","hkurtosis","hskewness","h5","h10","h15","h20","h25","h30","h35","h40",
-                           "h45","h50","h55","h60","h65","h70","h75","h80","h90","h95","h99","imax","imin","imean","imedian","imode",
-                           "ivar","isd","icv","ikurtosis","iskewness","i5","i10","i15","i20","i25","i30","i35","i40",
-                           "i45","i50","i55","i60","i65","i70","i75","i80","i90","i95","i99")
+  colnames(MetricsList)<-c("Tree","TotalReturns","ETOP","NTOP","EMIN","NMIN","EMAX","NMAX","EWIDTH","NWIDTH","HMAX","HMIN","HMEAN","HMEDIAN","HMODE",
+                           "HVAR","HSD","HCV","HKUR","HSKE","H05TH","H10TH","H15TH","H20TH","H25TH","H30TH","H35TH","H40TH",
+                           "H45TH","H50TH","H55TH","H60TH","H65TH","H70TH","H75TH","H80TH","H90TH","H95TH","H99TH","IMAX","IMIN","IMEAN","IMEDIAN","IMODE",
+                           "IVAR","ISD","ICV","IKUR","ISKE","I05TH","I10TH","I15TH","I20TH","I25TH","I30TH","I35TH","I40TH",
+                           "I45TH","I50TH","I55TH","I60TH","I65TH","I70TH","I75TH","I80TH","I90TH","I95TH","I99TH")
   return(data.frame(MetricsList))
 }

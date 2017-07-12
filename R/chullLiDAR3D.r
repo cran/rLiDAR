@@ -90,7 +90,7 @@
 #'@export
 chullLiDAR3D<-function(xyzid,plotit=TRUE,col="forestgreen", alpha=0.8) {
 
-  VolumeList<-matrix(,ncol=3)[-1,]
+  VolumeList<-matrix(ncol=3)[-1,]
   nlevels<-as.numeric(levels(factor(xyzid[,4])))
   
   for ( i in nlevels) {
@@ -110,7 +110,7 @@ chullLiDAR3D<-function(xyzid,plotit=TRUE,col="forestgreen", alpha=0.8) {
               if (length(nlevels)==length(alpha)) {alpha2=alpha[i]} 
                 else { stop(cat("The alpha parameter doesn't has the same the lenght of number of trees.")) }}
               
-        cat (".");flush.console()
+        cat (".");utils::flush.console()
         volume<-crownhull(xyz,plotit=TRUE,col=col2, alpha=alpha2)
       
       } else {
