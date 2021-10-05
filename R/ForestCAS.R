@@ -11,45 +11,49 @@
 #'@return Returns a list that contains the individual tree canopy boundary polygons and the 4-column matrix with the tree xy coordinates, heights and ground-projected canopy area (with units of square meters).  
 #'@author Carlos Alberto Silva
 #'@examples
-#'\dontrun{
-#'
-#'# Import the LiDAR-derived CHM file
-#'data(chm) # or set a CHM. e.g. chm<-raster("CHM_stand.asc") 
-#'
-#'# Set the loc parameter
-#'sCHM<-CHMsmoothing(chm, filter="mean", ws=5) # smoothing CHM
-#'loc<-FindTreesCHM(sCHM, fws=5, minht=8)      # or import a tree list
-#'
-#'# Set the maxcrown parameter
-#'maxcrown=10.0 
-#'
-#'# Set the exclusion parameter
-#'exclusion=0.3 # 30
-#'
-#'# Compute individual tree detection canopy area
-#'canopy<-ForestCAS(chm, loc, maxcrown, exclusion)
-#'
-#'#==================================================================================#
-#'# Retrieving the boundary for individual tree detection and canopy area calculation
-#'#==================================================================================#
-#'boundaryTrees<-canopy[[1]]
-#
-#'# Plotting the individual tree canopy boundary over the CHM
-#'plot(chm, main="LiDAR-derived CHM") 
-#'plot(boundaryTrees, add=T, border='red', bg='transparent') # adding tree canopy boundary
-#'
-#'#============================================================================#
-#'# Retrieving the list of individual trees detected for canopy area calculation
-#'#============================================================================#
-#'canopyList<-canopy[[2]] # list of ground-projected areas of individual tree canopies
-#'summary(canopyList)     # summary 
-#'
-#'# Spatial location of the trees
-#'library(sp)
-#'XY<-SpatialPoints(canopyList[,1:2])    # Spatial points
-#'plot(XY, col="black", add=T, pch="*")  # adding tree location to the plot
-#'} 
-#'@importFrom spatstat disc
+#' \donttest{
+#' # This takes > 5s
+#' library(raster)
+#'  
+#' # Import the LiDAR-derived CHM file
+#' data(chm) # or set a CHM. e.g. chm<-raster("CHM_stand.asc") 
+#' 
+#' # Set the loc parameter
+#' sCHM<-CHMsmoothing(chm, filter="mean", ws=5) # smoothing CHM
+#' loc<-FindTreesCHM(sCHM, fws=5, minht=8)      # or import a tree list
+#' 
+#' # Set the maxcrown parameter
+#' maxcrown=10.0 
+#' 
+#' # Set the exclusion parameter
+#' exclusion=0.3 # 30
+#' 
+#' # Compute individual tree detection canopy area
+#' canopy<-ForestCAS(chm, loc, maxcrown, exclusion)
+#' 
+#' #==================================================================================#
+#' # Retrieving the boundary for individual tree detection and canopy area calculation
+#' #==================================================================================#
+#' boundaryTrees<-canopy[[1]]
+# 
+#' # Plotting the individual tree canopy boundary over the CHM
+#' plot(chm, main="LiDAR-derived CHM") 
+#'  
+#' # adding tree canopy boundary
+#' plot(boundaryTrees, add = TRUE, border = 'red', bg = 'transparent')
+#' 
+#' #============================================================================#
+#' # Retrieving the list of individual trees detected for canopy area calculation
+#' #============================================================================#
+#' canopyList<-canopy[[2]] # list of ground-projected areas of individual tree canopies
+#' summary(canopyList)     # summary 
+#' 
+#' # Spatial location of the trees
+#' library(sp)
+#' XY<-SpatialPoints(canopyList[,1:2])    # Spatial points
+#' plot(XY, col = "black", add = TRUE, pch = "*")  # adding tree location to the plot
+#' } 
+#'@importFrom spatstat.geom disc
 #'@importFrom sp coordinates gridded Polygon Polygons SpatialPolygons over
 #'@importFrom sp over SpatialPoints SpatialPolygonsDataFrame SpatialGridDataFrame SpatialPixelsDataFrame
 #'@importFrom deldir tile.list deldir 

@@ -12,7 +12,7 @@
 #'@return A list with components 'crownvolume' and 'crownsurface', giving the
 #'volume and surface of the convex hull.
 #'@author Carlos Alberto Silva. Uses code by Remko Duursma (\emph{YplantQMC} package,see "crownhull"). 
-#'@references \url{www.qhull.org} and \emph{geometry} package (see \code{\link[geometry]{convhulln}}).
+#'@references \url{http://www.qhull.org} and \emph{geometry} package (see \code{\link[geometry]{convhulln}}).
 #'
 #'@examples
 #'

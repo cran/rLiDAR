@@ -1,20 +1,36 @@
 Package: rLiDAR
 Type: Package
 Title: LiDAR Data Processing and Visualization
-Version: 0.1.1
-Author: Carlos A. Silva, Nicholas L. Crookston,
-    Andrew T. Hudak, Lee A. Vierling, Carine Klauberg, Adri<c3><a1>n Cardil
-Maintainer: Carlos A. Silva <carlos_engflorestal@outlook.com>
+Version: 0.1.5
+Authors@R: c(
+    person("Carlos Alberto", "Silva", email = "carlos_engflorestal@outlook.com", role = c("aut", "cph", "cre")),
+    person("Nicholas L.", "Crookston", role = c("aut", "ctb")),
+    person("Andrew T.", "Hudak", role = c("aut", "ctb")),
+    person("Lee A.", "Vierling", role = c("aut", "ctb")),
+    person("Carine", "Klauberg", email = "carine_klauberg@hotmail.com", role = c("aut", "ctb")),
+    person("Adrian", "Cardil", email = "adriancardil@gmail.com", role = c("aut", "ctb")),
+    person("Caio", "Hamamura", email = "caiohamamura@gmail.com", role = c("aut", "ctb"), comment = "Maintenance and review"))
 Depends: R (>= 3.3.2)
-Imports: spatstat,sp,deldir,plyr,raster,geometry,rgl,bitops, methods
+Imports: bitops, deldir, geometry, methods, plyr, raster, rgeos, rgl,
+        sp, spatstat.geom
 Description: Set of tools for reading, processing and visualizing small set of
     LiDAR (Light Detection and Ranging) data for forest inventory applications.
+    More details were published in Silva et al. (2016) <doi:10.1080/07038992.2016.1196582>.
 License: GPL (>= 2)
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.2
 Repository: CRAN
 Repository/R-Forge/Project: rlidar
-Repository/R-Forge/Revision: 119
-Repository/R-Forge/DateTimeStamp: 2017-07-12 09:31:23
-Date/Publication: 2017-07-12 10:39:07 UTC
 NeedsCompilation: no
-Packaged: 2017-07-12 09:45:10 UTC; rforge
+Packaged: 2021-10-04 19:48:06 UTC; rforge
+URL: https://github.com/carlos-alberto-silva/rLiDAR
+Author: Carlos Alberto Silva [aut, cph, cre],
+  Nicholas L. Crookston [aut, ctb],
+  Andrew T. Hudak [aut, ctb],
+  Lee A. Vierling [aut, ctb],
+  Carine Klauberg [aut, ctb],
+  Adrian Cardil [aut, ctb],
+  Caio Hamamura [aut, ctb] (Maintenance and review)
+Maintainer: Carlos Alberto Silva <carlos_engflorestal@outlook.com>
+Repository/R-Forge/Revision: 129
+Repository/R-Forge/DateTimeStamp: 2021-10-04 19:27:16
+Date/Publication: 2021-10-05 07:30:02 UTC

@@ -40,7 +40,7 @@ Draws a 3D scatterplot for individual trees detected from Lidar data.
 }
 \examples{
 
-\dontrun{
+\donttest{
 #=======================================================================#
 # EXAMPLE 01: Plotting single trees
 #=======================================================================#
@@ -244,7 +244,7 @@ planes3d(0, 0, -1, 0.001, col="gray", alpha=0.7)   # set a terrain plane
 }
 }
 \references{
-\url{http://maespa.github.io/}
+\url{https://maespa.github.io/}
 }
 \author{
 Carlos Alberto Silva and Remko Duursma. Uses code by Remko Duursma (\emph{Maeswrap} package,see "Plotstand").

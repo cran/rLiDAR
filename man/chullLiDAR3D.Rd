@@ -96,7 +96,7 @@ aspect3d(1,1,0.7) # scale
 
 }
 \references{
-\url{www.qhull.org} and \emph{geometry} package (see \code{\link[geometry]{convhulln}}).
+\url{http://www.qhull.org} and \emph{geometry} package (see \code{\link[geometry]{convhulln}}).
 }
 \author{
 Carlos Alberto Silva. Uses code by Remko Duursma (\emph{YplantQMC} package,see "crownhull").
